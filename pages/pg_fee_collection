@@ -1,0 +1,48 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class FeeCollectionPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.global_student_search = (By.NAME, "search_student")
+        self.search_icon = (By.XPATH, "//div/button/span[@class='mat-button-wrapper'][1]")
+        self.payable_tab = (By.XPATH, "//a[text()='Payable']")
+        self.pending_invoice_tab = (By.XPATH, "//a[text()='Pending Invoice']")
+        self.payment_mode_dropdown = (By.XPATH, "//div[text()='Payment Mode']/following-sibling::div//button")
+        self.payment_mode_option = (By.XPATH, "//div[@role='menuitem' and text()='Cash']")
+        self.pay_button = (By.XPATH, "//button[text()='Pay']")
+    
+    def load(self):
+        nav = NavigationPage(self.driver)
+        nav.click_fee_configuration()
+
+
+    def search_student_by_id(self, student_id):
+        self.driver.find_element(*self.global_student_search).send_keys(student_id)
+        self.driver.find_element(*self.search_icon).click()
+
+
+    def click_pending_invoice_tab(self):
+        self.driver.find_element(*self.payable_tab).click()
+
+    def select_pending_invoice_record(self):
+        self.driver.find_element(*self.pending_invoice_tab).click()
+
+    def select_payment_mode(self):
+        payment_mode_dropdown = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.payment_mode_dropdown)
+        )
+        payment_mode_dropdown.click()
+        payment_mode_option = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.payment_mode_option)
+        )
+        payment_mode_option.click()
+
+    def click_pay_button(self):
+        self.driver.find_element(*self.pay_button).click()
+
+    def is_payment_successful(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//div[text()='Payment Successful']"))
+        )

@@ -1,0 +1,17 @@
+from selenium.webdriver.common.by import By
+
+class NavigationPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.staff_profile_management = (By.XPATH, "//span[text()='Staff Profile Management']")
+        self.staff_add = (By.XPATH, "//div[@class='sub-link-outer-custom']//ul/li/a[contains(text(),'Staff Add')]")
+        self.fee_configuration = (By.XPATH, "//span[text()='Fee Configuration']")
+
+    def click_staff_profile_management(self):
+        self.driver.find_element(*self.staff_profile_management).click()
+
+    def click_staff_add(self):
+        self.driver.find_element(*self.staff_add).click()
+        
+    def click_fee_configuration(self):
+        self.driver.find_element(*self.fee_configuration).click()

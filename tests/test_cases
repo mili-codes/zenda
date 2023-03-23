@@ -1,0 +1,50 @@
+from pages.pg_add_staff import StaffAddPage
+from pages.pg_fee_collection import FeeCollectionPage
+from pages.pg_login import LoginPage
+
+
+
+def test_add_staff(browser, test_data):
+    # create a LoginPage object
+    login_page = LoginPage(browser)
+    # open the login page
+    login_page.load()
+    # log in to the application
+    login_page.login('S0075', 'Abc!@1')
+    
+    # create a StaffAddPage object
+    staff_add_page = StaffAddPage(browser)
+    # open the Staff Add page
+    staff_add_page.load()
+    # enter the personal details for the new staff
+    staff_add_page.enter_personal_details(
+        test_data["first_name"],
+        test_data["last_name"],
+        test_data["dob"],
+        test_data["gender"],
+        test_data["address"]
+        )
+    # click the Save button to add the staff
+    staff_add_page.click_save_button()
+    # verify if the new staff is added successfully
+    assert staff_add_page.verify_page_name(test_data["first_name"])
+
+
+
+def test_fee_collection(browser, test_data):
+    
+    # create a FeeCollectionPage object
+    fee_collection_page = FeeCollectionPage(browser)
+    # open the Fee Collection page
+    fee_collection_page.load()
+    # search for a student by ID
+    fee_collection_page.search_student_by_id('200011312')
+    # select a pending invoice and choose the payment mode
+    fee_collection_page.click_pending_invoice_tab()
+    fee_collection_page.select_pending_invoice_record()
+    fee_collection_page.select_payment_mode('Cash')
+    # click the Pay button to collect the fee
+    fee_collection_page.click_pay_button()
+    
+    # verify that the payment was successful
+    assert fee_collection_page.is_payment_successful() == True

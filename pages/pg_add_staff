@@ -1,0 +1,33 @@
+from selenium.webdriver.common.by import By
+from pages.pg_navigation import NavigationPage
+
+
+class StaffAddPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.first_name = (By.NAME, "first_name")
+        self.last_name = (By.NAME, "last_name")
+        self.dob = (By.NAME, "dob")
+        self.gender = (By.NAME, "gender")
+        self.address = (By.NAME, "address")
+        self.save_button = (By.XPATH, "//button[text()='Save']")
+        self.pg_first_name =  "//td[text()='{}']"
+
+    def load(self):
+        nav = NavigationPage(self.driver)
+        nav.click_staff_profile_management()
+        nav.click_staff_add()
+
+    def enter_personal_details(self, first_name, last_name, dob, gender, address):
+        self.driver.find_element(*self.first_name).send_keys(first_name)
+        self.driver.find_element(*self.last_name).send_keys(last_name)
+        self.driver.find_element(*self.dob).send_keys(dob)
+        self.driver.find_element(*self.gender).send_keys(gender)
+        self.driver.find_element(*self.address).send_keys(address)
+        
+    def click_save_button(self):
+        self.driver.find_element(*self.save_button).click()
+
+    def verify_page_name(self, name):
+        assert self.driver.find_element(By.XPATH, self.pg_first_name.format(name) )
+    
